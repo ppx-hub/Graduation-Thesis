@@ -1,0 +1,158 @@
+\chapter{实验结果}
+\section{数据集介绍}
+\par
+暂时空
+\section{实验指标介绍}
+\par
+mAP(mean average precision)平均精度均值是目标检测中常用的指标，该指标可以
+可以用来度量模型预测框类别和位置是否准确。在Pascal VOC中，
+计算mAP的方式是取所有类别的AP的均值作为mAP的值。即：
+\[
+mAP=\frac{1}{N}\sum\limits_{i=1}^NAP_i
+\]
+而AP计算的方式是计算P-R(precision-recall)曲线下的面积（area under the curve, AUC）。
+曲线的面积实际上可以转换为积分的求解。但在计算机中，我们是无法精确计算积分值的。
+只能采取一些近似的方法。常用的积分求解方法就是插值法。以11点插值为例：
+11点插值通过在recall轴采样11个等间隔的值[0,0.1,0.2,...,1.0]，并对这11个recall值对应的precision值取平均来计算AP值。
+\section{实验结果对比}
+\subsection{ssd与spiking-ssd}
+\par
+在现有数据集下：选取数据集中56张图片作为测试集。以训练7000次保留的权重
+$ssd300\_PIGFA\_5000.pth$进行预测，原始SSD表现如下：
+{
+\begin{center}
+\begin{tabular}{rrrrrr}
+	\hline
+	dataset & recall & precision & F1 & AP@0.5 & mAP\\
+	\hline
+	pigfa & 1.0 & 1.0 & 1.0 & 1.0 & \multirow{4} *{0.95}\\
+	pigma & 0.89 & 0.89 & 0.89 & 0.87 &\\
+	peppa & 1.0 & 1.0 & 1.0 & 1.0 &\\
+	george & 0.96 & 1.0 &0.98  & 0.96 &\\
+	\hline
+\end{tabular}
+\end{center}
+}
+\par
+同样，基于$ssd300\_PIGFA\_5000.pth$进行脉冲神经网络的转化，转换后的SSD表现如下：
+{
+\begin{center}
+\begin{tabular}{rrrrrr}
+	\hline
+	dataset & recall & precision & F1 & AP@0.5 & mAP\\
+	\hline
+	pigfa & 0.26 & 0.43 & 0.32 & 0.18 & \multirow{4} *{0.65}\\
+	pigma & 0.77 & 0.81 & 0.78 & 0.71 &\\
+	peppa & 0.82 & 0.9 & 0.86 & 0.82 &\\
+	george & 0.89 & 0.96 &0.89  & 0.89 &\\
+	\hline
+\end{tabular}
+\end{center}
+}
+
+{
+\begin{center}
+\begin{tabular}{rrrrrr}
+	\hline
+	dataset & recall & precision & F1 & AP@0.5 & mAP\\
+	\hline
+	pigfa & 0.92 & 0.75 & 0.82 & 0.91 & \multirow{4} *{0.90}\\
+	pigma & 0.91 & 0.91 & 0.91 & 0.89 &\\
+	peppa & 1.0 & 1.0 & 1.0 & 1.0 &\\
+	george & 0.89 & 0.92 &0.9  & 0.81 &\\
+	\hline
+\end{tabular}
+\end{center}
+}
+
+{
+\begin{center}
+\begin{tabular}{rrrrrr}
+	\hline
+	dataset & recall & precision & F1 & AP@0.5 & mAP\\
+	\hline
+	pigfa & 0.92 & 0.92 & 0.92 & 0.91 & \multirow{4} *{0.91}\\
+	pigma & 0.91 & 0.91 & 0.91 & 0.89 &\\
+	peppa & 1.0 & 1.0 & 1.0 & 1.0 &\\
+	george & 0.89 & 0.96 &0.92  & 0.83 &\\
+	\hline
+\end{tabular}
+\end{center}
+}
+\par
+目标检测中，效果取决于预测框的位置和类别是否准确，
+mAP通过计算预测框和真实框的IoU来得到预测框的位置信息，
+通过精确度和召回率指标来评价预测框的类别信息，
+因此mAP是目前目标检测领域非常常用的评价指标。
+\par
+上面的结果显示，转换后的mAP降低了0.06，比原有的SSD降低了6\%，虽然理论上转换是接近无损的，但是不多的降低也是符合实际结果的。另外，此处的precision普遍较低，
+因为精确率Precision反映的是预测出来准确结果占所有预测结果的准确性，结果中普遍较低，意味着检测结果有很多是错误类别，但因为有非极大值抑制的存在。
+检测结果会进行删减，即不会影响mAP，这也是为什么回归率高的原因:代表预测出来准确结果在总体正样本中有很高的准确性。
+\subsection{yolo与spiking-yolo}
+\par
+在现有的数据集下：选取数据集中划分的69张图片作为测试集。以最大训练次数8000次中最佳权重$best.pt$为权重进行预测，原始的Yolo表现如下：
+{
+\begin{center}
+\begin{tabular}{rrrrrr}
+	\hline
+	dataset & recall & precision & F1 & AP@0.5 & mAP\\
+	\hline
+	pigfa & 1.0 & 0.974 & 0.987 & 0.995 & \multirow{4} *{0.99}\\
+	pigma & 1.0 & 0.979 & 0.989 & 0.995 &\\
+	peppa & 1.0 & 0.957 & 0.978 & 0.995 &\\
+	george & 0.93 & 0.883 &0.905  & 0.974 &\\
+	\hline
+\end{tabular}
+\end{center}
+}
+
+{
+\begin{center}
+\begin{tabular}{rrrrrr}
+	\hline
+	dataset & recall & precision & F1 & AP@0.5 & mAP\\
+	\hline
+	pigfa & 0.733 & 1.0 & 0.846 & 0.959 & \multirow{4} *{0.96}\\
+	pigma & 0.728 & 1.0 & 0.842 & 0.9995 &\\
+	peppa & 0.878 & 1.0 & 0.935 & 0.995 &\\
+	george & 0.789 & 0.847 &0.817  & 0.9 &\\
+	\hline
+\end{tabular}
+\end{center}
+}
+
+{
+\begin{center}
+\begin{tabular}{|r|r|r|r|r|r|}
+	\hline
+	\multicolumn{6}{|c|}{\textbf{Yolo}} \\
+	\hline
+	dataset & recall & precision & F1 & AP@0.5 & mAP\\
+	\hline
+	pigfa & 1.0 & 0.974 & 0.987 & 0.995 & \multirow{4} *{0.99}\\
+	pigma & 1.0 & 0.979 & 0.989 & 0.995 &\\
+	peppa & 1.0 & 0.957 & 0.978 & 0.995 &\\
+	george & 0.929 & 0.883 & 0.905 & 0.974 &\\
+	\hline
+\end{tabular}
+\end{center}
+}
+\par
+同样，基于$best.pt$进行脉冲神经网络的转化，转换后的YOLO表现如下：
+{
+\begin{center}
+\begin{tabular}{|r|r|r|r|r|r|}
+	\hline
+	\multicolumn{6}{|c|}{\textbf{Spiking-Yolo}} \\
+	\hline
+	dataset & recall & precision & F1 & AP@0.5 & mAP\\
+	\hline
+	pigfa & 0.733 & 1.0 & 0.846 & 0.959 & \multirow{4} *{0.96}\\
+	pigma & 0.728 & 1.0 & 0.989 & 0.9995 &\\
+	peppa & 0.878 & 1.0 & 0.935 & 0.995 &\\
+	george & 0.789 & 0.847 & 0.817 & 0.9 &\\
+	\hline
+\end{tabular}
+\end{center}
+}
+在我们的简单数据集上，转换的mAP接近原始yolo的值。

@@ -1,0 +1,68 @@
+\documentclass[oneside,openany]{bjtuThesis}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{mathptmx}
+\usepackage{float}
+\usepackage[numbers,square]{natbib}
+%\bibliographystyle{plainnat}
+\newcommand\mycite[1]{{\setcitestyle{square,super}\cite{#1}}}
+\newcommand\mycitex[1]{{\setcitestyle{authoryear,round}\cite{#1}}}
+%\usepackage{algorithm}
+%\usepackage{algorithmic}
+\usepackage[ruled,linesnumbered,noend]{algorithm2e}
+\usepackage{fontspec}
+\setmainfont{Times New Roman}
+\usepackage{cases}  
+%\usepackage{mathtools}
+\usepackage{amssymb}
+\usepackage{multirow}
+\hypersetup{colorlinks,linkcolor=red,citecolor=black,urlcolor=magenta}% 链接颜色设置
+\linespread{1.5}% 设置行距
+\input{data/package}% 加载宏包
+\input{data/info}% 加载论文信息
+
+\begin{document}
+
+% 封面
+\makecover
+\makeAuthorization
+\frontmatter
+\thesispagestyle{-4}{北京交通大学毕业设计（论文）}{}% 页眉设置
+
+% 中文摘要
+\include{data/cabstract}
+
+% 英文摘要
+\include{data/eabstract}
+
+% 目录
+\tableofcontents
+
+\mainmatter
+\thesispagestyle{-4}{北京交通大学毕业设计（论文）}{第 \thepage 页}% 页眉设置
+
+% 正文
+\include{data/chap01}
+\include{data/chap02}
+\include{data/chap03}
+\include{data/chap04}
+\include{data/chap05}
+\include{data/chap06}
+
+\backmatter
+\thesispagestyle{-4}{北京交通大学毕业设计（论文）}{}% 页眉设置
+
+% 参考文献
+%\bibliographystyle{ref/chinesebst}
+%\bibliographystyle{plainnat,unsrt}
+%\bibliographystyle{plainnat}
+\bibliographystyle{elsarticle-num-names}
+\bibliography{ref/refs}
+\addcontentsline{toc}{chapter}{参考文献}
+
+% 附录
+\include{data/edoc}% 英文原文
+\include{data/cdoc}% 中文翻译
+
+
+\end{document}
